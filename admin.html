@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Wheel of Names</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>?? Admin Panel - Add Names</h1>
+        <div class="admin-panel">
+            <form id="nameForm">
+                <input type="text" id="nameInput" placeholder="Enter username" required>
+                <button type="submit">Add Name</button>
+            </form>
+            <div class="names-list">
+                <h3>Current Names:</h3>
+                <ul id="namesList"></ul>
+                <button id="clearNames">Clear All Names</button>
+            </div>
+            <div class="controls">
+                <a href="display.html" class="display-link">Go to Display Page</a>
+            </div>
+        </div>
+    </div>
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheel of Names - Live Display</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>?? Wheel of Names - TikTok Live</h1>
+        <div class="timer-display">
+            <h2>Next round In: <span id="countdown">2:00</span></h2>
+        </div>
+        <div class="wheel-container">
+            <canvas id="wheel" width="400" height="400"></canvas>
+            <div class="wheel-pointer"></div>
+        </div>
+        <div id="result" class="result-display hidden">
+            <h2>?? Congratulations! ??</h2>
+            <div class="winner-name"></div>
+            <div class="next-draw">Next round starting soon...</div>
+        </div>
+        <div class="controls">
+            <button id="manualSpin" class="manual-spin">Manual Spin</button>
+            <a href="admin.html" class="admin-link">Admin Panel</a>
+        </div>
+    </div>
+    <script src="wheel.js"></script>
+</body>
+</html>
