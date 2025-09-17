@@ -2,6 +2,12 @@ class WheelOfNames {
     constructor() {
         this.names = [];
         this.canvas = document.getElementById('wheel');
+        if (!this.canvas) {
+            // If no canvas element, this is likely the admin page
+            // Only bind events for manual spin if button exists
+            this.bindEvents();
+            return;
+        }
         this.ctx = this.canvas.getContext('2d');
         this.isSpinning = false;
         this.timer = 120; // 2 minutes in seconds
@@ -16,12 +22,16 @@ class WheelOfNames {
         this.drawWheel();
         this.startTimer();
         this.bindEvents();
+        this.startNameRefresh();
     }
 
     bindEvents() {
-        document.getElementById('manualSpin').addEventListener('click', () => {
-            this.spinWheel();
-        });
+        const manualSpinButton = document.getElementById('manualSpin');
+        if (manualSpinButton) {
+            manualSpinButton.addEventListener('click', () => {
+                this.spinWheel();
+            });
+        }
     }
 
     loadNames() {
@@ -29,6 +39,26 @@ class WheelOfNames {
         if (this.names.length === 0) {
             this.names = ['Add names in admin panel'];
         }
+    }
+
+    startNameRefresh() {
+        // Listen for storage changes from other tabs
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'wheelNames') {
+                this.loadNames();
+                this.drawWheel();
+            }
+        });
+
+        // Also refresh every 2 seconds to catch same-tab updates
+        setInterval(() => {
+            const currentNames = JSON.stringify(this.names);
+            this.loadNames();
+            const newNames = JSON.stringify(this.names);
+            if (currentNames !== newNames) {
+                this.drawWheel();
+            }
+        }, 2000);
     }
 
     startTimer() {
@@ -51,13 +81,18 @@ class WheelOfNames {
     }
 
     updateTimerDisplay() {
-        const minutes = Math.floor(this.timer / 60);
-        const seconds = this.timer % 60;
-        const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        document.getElementById('countdown').textContent = display;
+        const countdownElement = document.getElementById('countdown');
+        if (countdownElement) {
+            const minutes = Math.floor(this.timer / 60);
+            const seconds = this.timer % 60;
+            const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            countdownElement.textContent = display;
+        }
     }
 
     drawWheel() {
+        if (!this.canvas) return; // Skip if no canvas
+        
         const centerX = this.canvas.width / 2;
         const centerY = this.canvas.height / 2;
         const radius = 180;
@@ -106,7 +141,9 @@ class WheelOfNames {
         if (this.isSpinning) return;
         
         this.loadNames(); // Refresh names from localStorage
-        this.drawWheel();
+        if (this.canvas) {
+            this.drawWheel();
+        }
         
         if (this.names.length === 0 || this.names[0] === 'Add names in admin panel') {
             alert('Please add names in the admin panel first!');
@@ -121,7 +158,9 @@ class WheelOfNames {
         const maxRotation = 3600; // 10 full rotations
         const finalRotation = Math.random() * (maxRotation - minRotation) + minRotation;
 
-        this.canvas.style.transform = `rotate(${finalRotation}deg)`;
+        if (this.canvas) {
+            this.canvas.style.transform = `rotate(${finalRotation}deg)`;
+        }
 
         setTimeout(() => {
             this.determineWinner(finalRotation);
@@ -139,24 +178,113 @@ class WheelOfNames {
     }
 
     showWinner(winner) {
-        const resultDiv = document.getElementById('result');
-        const winnerNameDiv = resultDiv.querySelector('.winner-name');
+        this.showWinnerModal(winner);
         
-        winnerNameDiv.textContent = winner;
-        resultDiv.classList.remove('hidden');
+        const resultDiv = document.getElementById('result');
+        if (resultDiv) {
+            const winnerNameDiv = resultDiv.querySelector('.winner-name');
+            if (winnerNameDiv) {
+                winnerNameDiv.textContent = winner;
+            }
+            resultDiv.classList.remove('hidden');
 
-        // Hide result after 10 seconds and reset wheel
+            // Hide result after 10 seconds and reset wheel
+            setTimeout(() => {
+                this.hideResult();
+                this.resetWheel();
+            }, 10000);
+        }
+    }
+
+    showWinnerModal(winner) {
+        // Create modal if it doesn't exist
+        let modal = document.getElementById('winnerModal');
+        if (!modal) {
+            modal = this.createWinnerModal();
+        }
+
+        // Set winner name
+        const winnerText = modal.querySelector('.modal-winner-name');
+        winnerText.textContent = winner;
+
+        // Show modal
+        modal.style.display = 'flex';
+        
+        // Start confetti
+        this.startConfetti();
+
+        // Close modal after 5 seconds
         setTimeout(() => {
-            this.hideResult();
-            this.resetWheel();
-        }, 10000);
+            modal.style.display = 'none';
+            this.stopConfetti();
+        }, 5000);
+
+        // Close modal on click
+        modal.onclick = (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                this.stopConfetti();
+            }
+        };
+    }
+
+    createWinnerModal() {
+        const modal = document.createElement('div');
+        modal.id = 'winnerModal';
+        modal.className = 'winner-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="confetti-container"></div>
+                <h2>🎉 Congratulations! 🎉</h2>
+                <div class="modal-winner-name"></div>
+                <p>You are the winner!</p>
+                <button class="modal-close" onclick="document.getElementById('winnerModal').style.display='none'">Close</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        return modal;
+    }
+
+    startConfetti() {
+        const container = document.querySelector('.confetti-container');
+        if (!container) return;
+
+        // Clear existing confetti
+        container.innerHTML = '';
+
+        // Create confetti pieces
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti-piece';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.animationDelay = Math.random() * 3 + 's';
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            confetti.style.backgroundColor = this.getRandomColor();
+            container.appendChild(confetti);
+        }
+    }
+
+    stopConfetti() {
+        const container = document.querySelector('.confetti-container');
+        if (container) {
+            container.innerHTML = '';
+        }
+    }
+
+    getRandomColor() {
+        const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'];
+        return colors[Math.floor(Math.random() * colors.length)];
     }
 
     hideResult() {
-        document.getElementById('result').classList.add('hidden');
+        const resultElement = document.getElementById('result');
+        if (resultElement) {
+            resultElement.classList.add('hidden');
+        }
     }
 
     resetWheel() {
+        if (!this.canvas) return; // Skip if no canvas
         this.canvas.style.transform = 'rotate(0deg)';
         this.drawWheel();
     }
