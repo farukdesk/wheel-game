@@ -10,7 +10,7 @@ class WheelOfNames {
         }
         this.ctx = this.canvas.getContext('2d');
         this.isSpinning = false;
-        this.timer = 120; // 2 minutes in seconds
+        this.timer = 30; // 30 seconds
         this.timerInterval = null;
         this.autoSpinTimeout = null;
         
@@ -19,10 +19,36 @@ class WheelOfNames {
 
     init() {
         this.loadNames();
+        this.setupResponsiveCanvas();
         this.drawWheel();
         this.startTimer();
         this.bindEvents();
         this.startNameRefresh();
+        
+        // Add resize listener for responsive canvas
+        window.addEventListener('resize', () => {
+            this.setupResponsiveCanvas();
+            this.drawWheel();
+        });
+    }
+
+    setupResponsiveCanvas() {
+        if (!this.canvas) return;
+        
+        const container = this.canvas.parentElement;
+        const containerWidth = container ? container.clientWidth : window.innerWidth;
+        const maxSize = Math.min(containerWidth - 40, 400); // 20px padding on each side, max 400px
+        const minSize = Math.max(280, maxSize); // minimum 280px
+        
+        const size = Math.min(maxSize, minSize);
+        
+        // Set canvas size
+        this.canvas.width = size;
+        this.canvas.height = size;
+        
+        // Update canvas display size via CSS if needed
+        this.canvas.style.width = size + 'px';
+        this.canvas.style.height = size + 'px';
     }
 
     bindEvents() {
@@ -76,7 +102,7 @@ class WheelOfNames {
     }
 
     resetTimer() {
-        this.timer = 120; // Reset to 2 minutes
+        this.timer = 30; // Reset to 30 seconds
         this.updateTimerDisplay();
     }
 
@@ -95,7 +121,7 @@ class WheelOfNames {
         
         const centerX = this.canvas.width / 2;
         const centerY = this.canvas.height / 2;
-        const radius = 180;
+        const radius = Math.min(this.canvas.width, this.canvas.height) * 0.4; // 40% of canvas size
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -119,20 +145,31 @@ class WheelOfNames {
             this.ctx.lineWidth = 2;
             this.ctx.stroke();
 
-            // Draw text
+            // Draw text with responsive font size
             this.ctx.save();
             this.ctx.translate(centerX, centerY);
             this.ctx.rotate(startAngle + anglePerSegment / 2);
             this.ctx.textAlign = 'center';
             this.ctx.fillStyle = '#fff';
-            this.ctx.font = 'bold 14px Arial';
-            this.ctx.fillText(name, radius / 1.5, 5);
+            
+            // Calculate responsive font size based on canvas size
+            const baseFontSize = Math.max(10, Math.min(16, this.canvas.width / 30));
+            this.ctx.font = `bold ${baseFontSize}px Arial`;
+            
+            // Truncate long names for small screens
+            let displayName = name;
+            if (name.length > 12 && this.canvas.width < 350) {
+                displayName = name.substring(0, 10) + '...';
+            }
+            
+            this.ctx.fillText(displayName, radius / 1.5, 5);
             this.ctx.restore();
         });
 
-        // Draw center circle
+        // Draw center circle with responsive size
+        const centerRadius = Math.max(15, radius * 0.08);
         this.ctx.beginPath();
-        this.ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI);
+        this.ctx.arc(centerX, centerY, centerRadius, 0, 2 * Math.PI);
         this.ctx.fillStyle = '#333';
         this.ctx.fill();
     }

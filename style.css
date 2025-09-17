@@ -12,44 +12,53 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 10px;
+    line-height: 1.4;
 }
 
 .container {
     text-align: center;
     max-width: 800px;
-    padding: 20px;
+    padding: 15px;
+    width: 100%;
 }
 
 h1 {
-    font-size: 2.5em;
-    margin-bottom: 30px;
+    font-size: 1.8em;
+    margin-bottom: 20px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    line-height: 1.2;
 }
 
 .admin-panel {
     background: rgba(255,255,255,0.1);
-    padding: 30px;
+    padding: 20px;
     border-radius: 15px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,0.2);
 }
 
 #nameForm {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
 }
 
 #nameInput {
-    padding: 12px 20px;
+    padding: 15px 20px;
     font-size: 16px;
     border: none;
     border-radius: 25px;
-    margin-right: 10px;
-    min-width: 200px;
     outline: none;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
 }
 
 button {
-    padding: 12px 25px;
+    padding: 15px 25px;
     font-size: 16px;
     border: none;
     border-radius: 25px;
@@ -57,11 +66,19 @@ button {
     color: white;
     cursor: pointer;
     transition: all 0.3s ease;
+    min-height: 48px;
+    min-width: 120px;
+    touch-action: manipulation;
 }
 
-button:hover {
+button:hover, button:focus {
     background: #ff5252;
     transform: translateY(-2px);
+    outline: none;
+}
+
+button:active {
+    transform: translateY(0);
 }
 
 .names-list {
@@ -70,7 +87,7 @@ button:hover {
 
 #namesList {
     list-style: none;
-    padding: 20px;
+    padding: 15px;
     background: rgba(255,255,255,0.1);
     border-radius: 10px;
     max-height: 200px;
@@ -79,52 +96,70 @@ button:hover {
 }
 
 #namesList li {
-    padding: 5px 0;
+    padding: 10px 0;
     border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#namesList li button {
+    padding: 8px 15px;
+    font-size: 14px;
+    min-height: 36px;
+    min-width: 80px;
 }
 
 .wheel-container {
     position: relative;
     display: inline-block;
-    margin: 30px 0;
+    margin: 20px 0;
+    width: 100%;
+    max-width: 400px;
 }
 
 #wheel {
     border-radius: 50%;
     box-shadow: 0 0 30px rgba(0,0,0,0.3);
     transition: transform 10s cubic-bezier(0.23, 1, 0.32, 1);
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+    max-height: 400px;
 }
 
 .wheel-pointer {
     position: absolute;
-    top: -10px;
+    top: -8px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-top: 30px solid #ff6b6b;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 24px solid #ff6b6b;
     z-index: 10;
 }
 
 .timer-display {
     background: rgba(255,255,255,0.1);
-    padding: 20px;
+    padding: 15px;
     border-radius: 15px;
     margin-bottom: 20px;
     backdrop-filter: blur(10px);
 }
 
 #countdown {
-    font-size: 2em;
+    font-size: 1.8em;
     font-weight: bold;
     color: #ffeb3b;
 }
 
 .result-display {
     background: rgba(76, 175, 80, 0.9);
-    padding: 30px;
+    padding: 20px;
     border-radius: 15px;
     margin: 20px 0;
     backdrop-filter: blur(10px);
@@ -136,21 +171,35 @@ button:hover {
 }
 
 .winner-name {
-    font-size: 3em;
+    font-size: 2em;
     font-weight: bold;
-    margin: 20px 0;
+    margin: 15px 0;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    word-break: break-word;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    margin-top: 20px;
 }
 
 .display-link, .admin-link {
     display: inline-block;
-    padding: 12px 25px;
+    padding: 15px 25px;
     background: #4caf50;
     color: white;
     text-decoration: none;
     border-radius: 25px;
-    margin: 10px;
     transition: all 0.3s ease;
+    min-height: 48px;
+    min-width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
 }
 
 .display-link:hover, .admin-link:hover {
@@ -160,7 +209,7 @@ button:hover {
 
 .manual-spin {
     background: #ff9800;
-    margin: 10px;
+    margin: 0;
 }
 
 .manual-spin:hover {
@@ -188,38 +237,41 @@ button:hover {
     background-color: rgba(0, 0, 0, 0.8);
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
 
 .modal-content {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 40px;
+    padding: 30px 20px;
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     position: relative;
     overflow: hidden;
     max-width: 500px;
+    width: 100%;
     margin: 20px;
 }
 
 .modal-content h2 {
-    font-size: 2.5em;
+    font-size: 2em;
     margin-bottom: 20px;
     color: white;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 .modal-winner-name {
-    font-size: 3em;
+    font-size: 2.2em;
     font-weight: bold;
     margin: 20px 0;
     color: #ffeb3b;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    word-break: break-word;
 }
 
 .modal-content p {
-    font-size: 1.2em;
-    margin-bottom: 30px;
+    font-size: 1.1em;
+    margin-bottom: 25px;
     color: white;
 }
 
@@ -227,11 +279,13 @@ button:hover {
     background: #ff6b6b;
     border: none;
     color: white;
-    padding: 12px 25px;
+    padding: 15px 25px;
     font-size: 16px;
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
+    min-height: 48px;
+    touch-action: manipulation;
 }
 
 .modal-close:hover {
@@ -266,5 +320,202 @@ button:hover {
     100% {
         transform: translateY(100vh) rotate(720deg);
         opacity: 0;
+    }
+}
+
+/* Mobile Responsive Design */
+@media screen and (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+    
+    .container {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+    
+    .admin-panel {
+        padding: 15px;
+    }
+    
+    #nameForm {
+        gap: 12px;
+    }
+    
+    #nameInput {
+        padding: 12px 15px;
+        font-size: 14px;
+        max-width: 280px;
+    }
+    
+    button {
+        padding: 12px 20px;
+        font-size: 14px;
+        min-height: 44px;
+        min-width: 100px;
+    }
+    
+    #namesList {
+        padding: 12px;
+        max-height: 150px;
+    }
+    
+    #namesList li {
+        padding: 8px 0;
+        font-size: 14px;
+    }
+    
+    #namesList li button {
+        padding: 6px 12px;
+        font-size: 12px;
+        min-height: 32px;
+        min-width: 70px;
+    }
+    
+    .wheel-container {
+        margin: 15px 0;
+        max-width: 300px;
+    }
+    
+    .wheel-pointer {
+        top: -6px;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 20px solid #ff6b6b;
+    }
+    
+    .timer-display {
+        padding: 12px;
+    }
+    
+    #countdown {
+        font-size: 1.5em;
+    }
+    
+    .winner-name {
+        font-size: 1.6em;
+        margin: 12px 0;
+    }
+    
+    .controls {
+        gap: 12px;
+    }
+    
+    .display-link, .admin-link {
+        padding: 12px 20px;
+        min-width: 120px;
+        font-size: 14px;
+    }
+    
+    .modal-content {
+        padding: 20px 15px;
+        margin: 15px;
+    }
+    
+    .modal-content h2 {
+        font-size: 1.6em;
+        margin-bottom: 15px;
+    }
+    
+    .modal-winner-name {
+        font-size: 1.8em;
+        margin: 15px 0;
+    }
+    
+    .modal-content p {
+        font-size: 1em;
+        margin-bottom: 20px;
+    }
+    
+    .modal-close {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
+
+/* Tablet Responsive Design */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    .admin-panel {
+        padding: 25px;
+    }
+    
+    #nameForm {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    #nameInput {
+        max-width: 250px;
+        margin-right: 0;
+    }
+    
+    .wheel-container {
+        max-width: 350px;
+    }
+    
+    .controls {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Large Screen Optimization */
+@media screen and (min-width: 769px) {
+    h1 {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+    }
+    
+    .admin-panel {
+        padding: 30px;
+    }
+    
+    #nameForm {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    #nameInput {
+        margin-right: 0;
+        max-width: 300px;
+    }
+    
+    .controls {
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .wheel-container {
+        margin: 30px 0;
+    }
+    
+    .timer-display {
+        padding: 20px;
+    }
+    
+    #countdown {
+        font-size: 2em;
+    }
+    
+    .winner-name {
+        font-size: 2.5em;
+        margin: 20px 0;
     }
 }
