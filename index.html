@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spinning Wheel - TikTok Live</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 2px solid #333;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .timer {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        .winner {
+            font-size: 32px;
+            font-weight: bold;
+            color: #28a745;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            canvas {
+                width: 90%;
+                height: auto;
+            }
+            .timer, .winner {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to the Spinning Wheel!</h1>
+    <canvas id="wheel" width="500" height="500"></canvas>
+    <div class="timer" id="timer">Time Left: 30s</div>
+    <div class="winner" id="winner">Winner: None</div>
+
+    <script>
+        // JavaScript code for wheel logic and timer functionality will go here
+        // For now, just a placeholder
+        const timerElement = document.getElementById('timer');
+        let timeLeft = 30;
+
+        const countdown = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                document.getElementById('winner').innerText = "Time's up! No winner!";
+            } else {
+                timerElement.innerText = `Time Left: ${timeLeft}s`;
+                timeLeft -= 1;
+            }
+        }, 1000);
+    </script>
+
+</body>
+</html>
